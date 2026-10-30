@@ -145,6 +145,18 @@ export function createPicomposerMcpServer(options: CreatePicomposerMcpOptions): 
     }
   );
 
+  server.registerResource(
+    "ui-catalog-components",
+    "ui://catalog/components",
+    {
+      title: "PiUI Component & Layout Catalog",
+      description:
+        "Returns all typed atoms, molecules, and composer composite components available in the PiUI generative ecosystem.",
+      mimeType: "application/json",
+    },
+    async (uri) => jsonResource(uri, await client.getComponentCatalog())
+  );
+
   // ---------------------------------------------------------------------------
   // MCP Tools (Generative UI Composition, Selection Actions, Macros, Charts, Timers)
   // ---------------------------------------------------------------------------
@@ -371,6 +383,36 @@ export function createPicomposerMcpServer(options: CreatePicomposerMcpOptions): 
         pageName: args.pageName,
         viewNumber: args.viewNumber,
         useMouseContext: true,
+      });
+      return jsonToolResult(result);
+    }
+  );
+
+  server.registerTool(
+    "ui_create_ui_cue",
+    {
+      title: "Create a Phrase- or Section-Triggered UI Cue",
+      description:
+        "Creates a UI-cue (standing UI rule) that automatically mounts a button/panel on /gui/:name/:number when a specific spoken phrase or sermon section is detected.",
+      inputSchema: {
+        phrase: z.string().describe("Spoken phrase or keyword to listen for in STT transcript (e.g. 'resurrection')"),
+        phraseHoldSec: z.number().positive().default(120).describe("Duration in seconds to hold the UI cue active after phrase is spoken"),
+        actionLabel: z.string().default("Trigger Action").describe("Label for the mounted action button (e.g. 'Graveyard Graphic on DSK')"),
+        section: z.string().optional().describe("Optional rundown section to constrain the cue to (e.g. 'sermon')"),
+        pageName: z.string().default("1"),
+        viewNumber: z.number().int().min(1).default(1),
+      },
+    },
+    async (rawArgs) => {
+      const args = pseudonymizer.inbound(rawArgs);
+      const sectionClause = args.section ? ` during ${args.section}` : "";
+      const prompt = `show button that puts ${args.actionLabel} if speaker speaks about ${args.phrase}${sectionClause}`;
+      const result = await client.promptCompose({
+        prompt,
+        pageName: args.pageName,
+        viewNumber: args.viewNumber,
+        useBroadcastContext: true,
+        useMouseContext: false,
       });
       return jsonToolResult(result);
     }

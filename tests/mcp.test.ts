@@ -142,6 +142,17 @@ test("MCP Resources & Tools: operator draws on /gui/john/1 in one screen and use
         { status: 200 }
       );
     }
+    if (u.pathname === "/api/v1/catalog/components") {
+      return new Response(
+        JSON.stringify({
+          catalog: [
+            { kind: "button", layer: "atom", actionable: true },
+            { kind: "live-captions-feed", layer: "molecule", actionable: false },
+          ],
+        }),
+        { status: 200 }
+      );
+    }
     if (u.pathname === "/api/v1/prompt" && init?.method === "POST") {
       const body = JSON.parse(String(init.body));
       promptsReceived.push(body);
@@ -249,6 +260,27 @@ test("MCP Resources & Tools: operator draws on /gui/john/1 in one screen and use
   });
   assert.ok(String(promptsReceived[2]!.prompt).includes("show for 300 seconds"));
   assert.ok(String(promptsReceived[2]!.prompt).includes("show only after sermon has passed"));
+
+  // 5. Read UI component catalog resource
+  const catalogRes = await mcpClient.readResource({ uri: "ui://catalog/components" });
+  const catalogText = ((catalogRes.contents as Array<{ text: string }>)[0]!).text;
+  assert.ok(catalogText.includes("button"));
+  assert.ok(catalogText.includes("live-captions-feed"));
+
+  // 6. Cloud AI calls ui_create_ui_cue (e.g. resurrection phrase cue)
+  await mcpClient.callTool({
+    name: "ui_create_ui_cue",
+    arguments: {
+      phrase: "resurrection",
+      phraseHoldSec: 120,
+      actionLabel: "Graveyard Graphic on DSK",
+      section: "sermon",
+      pageName: "john",
+      viewNumber: 1,
+    },
+  });
+  assert.ok(String(promptsReceived[3]!.prompt).includes("resurrection"));
+  assert.ok(String(promptsReceived[3]!.prompt).includes("Graveyard Graphic on DSK"));
 
   await mcpClient.close();
   await mcpServer.close();

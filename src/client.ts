@@ -104,4 +104,8 @@ export class PicomposerClient {
       body: JSON.stringify(payload),
     });
   }
+
+  async getComponentCatalog(): Promise<Record<string, unknown>> {
+    return this.requestJson("/api/v1/catalog/components");
+  }
 }
