@@ -29,7 +29,7 @@
   "pi": {
     "service": "picomposer-mcp",
     "displayName": "PiComposer MCP",
-    "layer": "+1 Control Plane",
+    "layer": "Control plane",
     "port": 3601,
     "ports": {},
     "healthEndpoint": "/health",
