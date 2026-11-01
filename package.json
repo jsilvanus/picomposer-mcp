@@ -1,6 +1,7 @@
 {
   "name": "picomposer-mcp",
   "version": "0.1.0",
+  "packageManager": "pnpm@11.23.0",
   "private": true,
   "type": "module",
   "description": "MCP server for picomposer generative UI: exposes mouse, broadcast, and last-message contexts as resources and generative UI tools with strict PII redaction.",
@@ -24,5 +25,14 @@
     "@types/node": "^22.13.5",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
+  },
+  "pi": {
+    "service": "picomposer-mcp",
+    "displayName": "PiComposer MCP",
+    "layer": "+1 Control Plane",
+    "port": 3461,
+    "ports": {},
+    "healthEndpoint": "/health",
+    "envPortVar": "PICOMPOSER_MCP_PORT"
   }
 }
