@@ -30,7 +30,7 @@
     "service": "picomposer-mcp",
     "displayName": "PiComposer MCP",
     "layer": "+1 Control Plane",
-    "port": 3461,
+    "port": 3601,
     "ports": {},
     "healthEndpoint": "/health",
     "envPortVar": "PICOMPOSER_MCP_PORT"

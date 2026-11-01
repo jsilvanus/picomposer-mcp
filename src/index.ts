@@ -8,7 +8,7 @@ export * from "./app.js";
 
 async function main(): Promise<void> {
   const host = process.env["PICOMPOSER_MCP_HOST"] ?? "127.0.0.1";
-  const port = Number.parseInt(process.env["PICOMPOSER_MCP_PORT"] ?? "3461", 10);
+  const port = Number.parseInt(process.env["PICOMPOSER_MCP_PORT"] ?? "3601", 10);
   const { app } = buildMcpApp();
   await app.listen({ host, port });
   console.log(`picomposer-mcp listening on http://${host}:${port}/mcp`);
