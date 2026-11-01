@@ -175,7 +175,7 @@ test("MCP Resources & Tools: operator draws on /gui/john/1 in one screen and use
 
   const pseudonymizer = new SessionPseudonymizer();
   const picomposerClient = new PicomposerClient({
-    baseUrl: "http://127.0.0.1:3460",
+    baseUrl: "http://127.0.0.1:3402",
     fetchFn: mockFetch,
   });
   const mcpServer = createPicomposerMcpServer({

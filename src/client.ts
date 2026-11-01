@@ -8,7 +8,7 @@ export class PicomposerClient {
   private readonly fetchFn: typeof fetch;
 
   constructor(options: PicomposerClientOptions = {}) {
-    this.baseUrl = (options.baseUrl ?? process.env["PICOMPOSER_URL"] ?? "http://127.0.0.1:3460").replace(
+    this.baseUrl = (options.baseUrl ?? process.env["PICOMPOSER_URL"] ?? "http://127.0.0.1:3402").replace(
       /\/+$/,
       ""
     );
